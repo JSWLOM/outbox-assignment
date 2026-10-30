@@ -2,7 +2,7 @@
 
 A production-style email scheduler: schedule emails through an API, persist them in Postgres, delay-schedule them with **BullMQ + Redis** (no cron), send through **Ethereal SMTP** from multiple senders, search them in **Elasticsearch**, and watch the queue live in **Bull Board**. A React dashboard (see the Frontend section) sits on top.
 
-```
+```text
 .
 ├── backend/    Express + TypeScript API, BullMQ worker
 └── frontend/   React + Tailwind dashboard (setup below)
@@ -105,7 +105,7 @@ In development Vite proxies `/api` and `/auth` to `http://localhost:4000`, so no
 
 Frontend stack: Vite, React 19, TypeScript, Tailwind CSS 4, React Router, TipTap (rich-text editor), DOMPurify.
 
-```
+```text
 frontend/src/
 ├── components/
 │   ├── ui/        Button, Avatar, Toast, Skeleton, EmptyState, Logo
@@ -122,14 +122,14 @@ frontend/src/
 
 ## Architecture
 
-```
- Client ──▶ Express API ──▶ Postgres (source of truth: emails, senders, users)
-                │   └────▶ Elasticsearch (searchable copy)
-                └────────▶ Redis / BullMQ (delayed jobs)
-                                │
-                          Worker(s) ──▶ rate limiter (Redis) ──▶ Ethereal SMTP
-                                │
-                                └────▶ Slack webhook (on hourly-limit hit)
+```text
+Client ──▶ Express API ──▶ Postgres (source of truth: emails, senders, users)
+               │   └────▶ Elasticsearch (searchable copy)
+               └────────▶ Redis / BullMQ (delayed jobs)
+                               │
+                         Worker(s) ──▶ rate limiter (Redis) ──▶ Ethereal SMTP
+                               │
+                               └────▶ Slack webhook (on hourly-limit hit)
 ```
 
 ### How scheduling works
@@ -273,7 +273,7 @@ Schedule request (`hourlyLimit` and `senderId` are optional; without `senderId`,
 | Connect / disconnect Slack | Done (user menu) |
 | Auto-refresh | Done (10 s polling) |
 
-Design note: the layout follows the provided Figma (sidebar, list rows with time pills, compose screen). The email/password login form in the design is rendered but disabled, because the assignment requires Google login only.
+**Design note:** the layout follows the provided Figma (sidebar, list rows with time pills, compose screen). The email/password login form in the design is rendered but disabled, because the assignment requires Google login only.
 
 ---
 
