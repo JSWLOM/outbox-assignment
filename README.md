@@ -293,5 +293,6 @@ Schedule request (`hourlyLimit` and `senderId` are optional; without `senderId`,
 1. Schedule a batch from the dashboard and show the Scheduled tab.
 2. Show the Sent tab filling in, and the Bull Board queue live.
 3. **Restart scenario:** schedule ~10 emails 90 seconds out, stop the worker, start it again, and verify that pending jobs resume after the worker restarts. Note: delivery is at-least-once, so the documented SMTP/DB crash-window caveat still applies.
-4. **Rate limit:** set `MAX_EMAILS_PER_HOUR_PER_SENDER=2`, schedule a batch, and show the deferred rows' new `scheduled_at` and the Slack message.#   o u t b o x - a s s i g n m e n t  
+4. **Rate limit:** set `MAX_EMAILS_PER_HOUR_PER_SENDER=2`, schedule a batch, and show the deferred rows' new `scheduled_at` and the Slack message.
+#   o u t b o x - a s s i g n m e n t  
  
