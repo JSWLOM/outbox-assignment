@@ -87,7 +87,7 @@ Nothing manual is needed. On first boot, `ensureSenders()` calls `nodemailer.cre
 ### Slack setup
 
 1. Create a Slack app and add the `incoming-webhook` bot scope.
-2. Add the redirect URL (`SLACK_REDIRECT_URI`, e.g. `https://<ngrok>/api/slack/callback`; Slack requires https outside localhost).
+2. Add the redirect URL (`SLACK_REDIRECT_URI`, e.g. `https://YOUR-NGROK-DOMAIN.ngrok-free.app/api/slack/callback`; Slack requires https outside localhost).
 3. Put the client ID and secret in `.env`.
 4. In the dashboard, click **Connect Slack**.
 
@@ -287,5 +287,12 @@ Schedule request (`hourlyLimit` and `senderId` are optional; without `senderId`,
 - **Raw SQL migrations** run on boot (`CREATE TABLE IF NOT EXISTS`) instead of a migration tool, to keep setup to one command.
 - `DEV_AUTH_BYPASS` exists only for local testing and must stay `false` in any shared environment.
 - Slack requires an https redirect URI, so local testing needs a tunnel such as ngrok.
+
+## Demo checklist
+
+1. Schedule a batch from the dashboard and show the Scheduled tab.
+2. Show the Sent tab filling in, and the Bull Board queue live.
+3. **Restart scenario:** schedule ~10 emails 90 seconds out, stop the worker, start it again, and verify that pending jobs resume after the worker restarts. Note: delivery is at-least-once, so the documented SMTP/DB crash-window caveat still applies.
+4. **Rate limit:** set `MAX_EMAILS_PER_HOUR_PER_SENDER=2`, schedule a batch, and show the deferred rows' new `scheduled_at` and the Slack message.
 #   o u t b o x - a s s i g n m e n t  
  
