@@ -45,7 +45,7 @@ docker compose up -d     # Postgres 16, Redis 7 (appendonly yes), Elasticsearch 
 ### 2. Environment
 
 ```bash
-cp .env.example .env
+cp .env.example .env     # Windows PowerShell: Copy-Item .env.example .env
 ```
 
 | Variable | Purpose | Default |
@@ -247,7 +247,7 @@ Schedule request (`hourlyLimit` and `senderId` are optional; without `senderId`,
 | Minimum delay between sends | Done (BullMQ limiter) |
 | Hourly limit, Redis-backed, multi-worker safe | Done (Lua counter) |
 | Over-limit jobs rescheduled, not dropped | Done |
-| Slack notification on limit hit | Done (OAuth + webhook) |
+| Slack notification on limit hit | Implemented (OAuth connect, per-user webhook, message on limit hit; see Slack setup) |
 | Elasticsearch search | Done |
 | Live BullMQ dashboard | Done (Bull Board) |
 | Google OAuth | Done |
@@ -266,7 +266,7 @@ Schedule request (`hourlyLimit` and `senderId` are optional; without `senderId`,
 | Compose: start time ("Send Later" picker), delay between emails, hourly limit | Done |
 | From selector (rotate senders or pin one) | Done |
 | Scheduled table: email, subject, scheduled time, status | Done |
-| Sent table: email, subject, sent time, status (`sent` / `failed`) | Done (time and status on the detail view; list shows status) |
+| Sent table: email, subject, sent time, status (`sent` / `failed`) | Done |
 | Loading skeletons, empty states, error toasts and retry | Done |
 | Search (Elasticsearch-backed) | Done |
 | Email detail view | Done |
@@ -293,6 +293,5 @@ Design note: the layout follows the provided Figma (sidebar, list rows with time
 1. Schedule a batch from the dashboard and show the Scheduled tab.
 2. Show the Sent tab filling in, and the Bull Board queue live.
 3. **Restart scenario:** schedule ~10 emails 90 seconds out, stop the worker, start it again, and show they still send exactly once.
-4. **Rate limit:** set `MAX_EMAILS_PER_HOUR_PER_SENDER=2`, schedule a batch, and show the deferred rows' new `scheduled_at` and the Slack message.
-#   o u t b o x - a s s i g n m e n t  
+4. **Rate limit:** set `MAX_EMAILS_PER_HOUR_PER_SENDER=2`, schedule a batch, and show the deferred rows' new `scheduled_at` and the Slack message.#   o u t b o x - a s s i g n m e n t  
  
