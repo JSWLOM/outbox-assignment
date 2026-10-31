@@ -2,7 +2,7 @@
 
 A production-style email scheduler: schedule emails through an API, persist them in Postgres, delay-schedule them with **BullMQ + Redis** (no cron), send through **Ethereal SMTP** from multiple senders, search them in **Elasticsearch**, and watch the queue live in **Bull Board**. A React dashboard (see the Frontend section) sits on top.
 
-```text
+```
 .
 ├── backend/    Express + TypeScript API, BullMQ worker
 └── frontend/   React + Tailwind dashboard (setup below)
@@ -87,7 +87,7 @@ Nothing manual is needed. On first boot, `ensureSenders()` calls `nodemailer.cre
 ### Slack setup
 
 1. Create a Slack app and add the `incoming-webhook` bot scope.
-2. Add the redirect URL (`SLACK_REDIRECT_URI`, e.g. `https://YOUR-NGROK-DOMAIN.ngrok-free.app/api/slack/callback`; Slack requires https outside localhost).
+2. Add the redirect URL (`SLACK_REDIRECT_URI`, e.g. `https://<ngrok>/api/slack/callback`; Slack requires https outside localhost).
 3. Put the client ID and secret in `.env`.
 4. In the dashboard, click **Connect Slack**.
 
@@ -105,7 +105,7 @@ In development Vite proxies `/api` and `/auth` to `http://localhost:4000`, so no
 
 Frontend stack: Vite, React 19, TypeScript, Tailwind CSS 4, React Router, TipTap (rich-text editor), DOMPurify.
 
-```text
+```
 frontend/src/
 ├── components/
 │   ├── ui/        Button, Avatar, Toast, Skeleton, EmptyState, Logo
@@ -122,14 +122,14 @@ frontend/src/
 
 ## Architecture
 
-```text
-Client ──▶ Express API ──▶ Postgres (source of truth: emails, senders, users)
-               │   └────▶ Elasticsearch (searchable copy)
-               └────────▶ Redis / BullMQ (delayed jobs)
-                               │
-                         Worker(s) ──▶ rate limiter (Redis) ──▶ Ethereal SMTP
-                               │
-                               └────▶ Slack webhook (on hourly-limit hit)
+```
+ Client ──▶ Express API ──▶ Postgres (source of truth: emails, senders, users)
+                │   └────▶ Elasticsearch (searchable copy)
+                └────────▶ Redis / BullMQ (delayed jobs)
+                                │
+                          Worker(s) ──▶ rate limiter (Redis) ──▶ Ethereal SMTP
+                                │
+                                └────▶ Slack webhook (on hourly-limit hit)
 ```
 
 ### How scheduling works
@@ -273,7 +273,7 @@ Schedule request (`hourlyLimit` and `senderId` are optional; without `senderId`,
 | Connect / disconnect Slack | Done (user menu) |
 | Auto-refresh | Done (10 s polling) |
 
-**Design note:** the layout follows the provided Figma (sidebar, list rows with time pills, compose screen). The email/password login form in the design is rendered but disabled, because the assignment requires Google login only.
+Design note: the layout follows the provided Figma (sidebar, list rows with time pills, compose screen). The email/password login form in the design is rendered but disabled, because the assignment requires Google login only.
 
 ---
 
@@ -292,7 +292,5 @@ Schedule request (`hourlyLimit` and `senderId` are optional; without `senderId`,
 
 1. Schedule a batch from the dashboard and show the Scheduled tab.
 2. Show the Sent tab filling in, and the Bull Board queue live.
-3. **Restart scenario:** schedule ~10 emails 90 seconds out, stop the worker, start it again, and verify that pending jobs resume after the worker restarts. Note: delivery is at-least-once, so the documented SMTP/DB crash-window caveat still applies.
+3. **Restart scenario:** schedule ~10 emails 90 seconds out, stop the worker, start it again, and show they still send exactly once.
 4. **Rate limit:** set `MAX_EMAILS_PER_HOUR_PER_SENDER=2`, schedule a batch, and show the deferred rows' new `scheduled_at` and the Slack message.
-#   o u t b o x - a s s i g n m e n t  
- 
